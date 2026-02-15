@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>SharePoint File Search</title>
 </head>
+
 <body>
     <h2>Search SharePoint Files</h2>
 
     <input type="text" id="filename" placeholder="Enter filename query" />
     <button onclick="callFlow()">Search</button>
 
-    <pre id="result"></pre>
+    <div id="result"></div>
 
     <script>
         async function callFlow() {
             const filenameQuery = document.getElementById("filename").value;
 
-            const response = await fetch("https://defaultf66fae025d36495bbfe078a6ff9f8e.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/35ea75d9b8fd4f9aa4e3a5eba28c020c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FRuWy8qA-uxjgPD3Zdzfp29iD7w014kjK-GtwEVHhZY" , {
+            const response = await fetch("https://defaultf66fae025d36495bbfe078a6ff9f8e.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/35ea75d9b8fd4f9aa4e3a5eba28c020c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FRuWy8qA-uxjgPD3Zdzfp29iD7w014kjK-GtwEVHhZY", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -25,9 +27,27 @@
                 })
             });
 
-            const data = await response.text();
-            document.getElementById("result").innerText = data;
+            const data = await response.json();
+
+            const resultContainer = document.getElementById("result");
+            resultContainer.innerHTML = "";
+
+            if (results.length === 0) {
+                resultContainer.innerHTML = "No files found.";
+                return;
+            }
+
+            results.forEach(file => {
+                const link = document.createElement("a");
+                link.href = file.link;
+                link.textContent = file.name;
+                link.target = "_blank";
+                link.style.display = "block";
+
+                resultContainer.appendChild(link);
+            });
         }
     </script>
 </body>
+
 </html>
