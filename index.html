@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SharePoint File Search</title>
+</head>
+<body>
+    <h2>Search SharePoint Files</h2>
+
+    <input type="text" id="filename" placeholder="Enter filename query" />
+    <button onclick="callFlow()">Search</button>
+
+    <pre id="result"></pre>
+
+    <script>
+        async function callFlow() {
+            const filenameQuery = document.getElementById("filename").value;
+
+            const response = await fetch("YOUR_FULL_FLOW_URL", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    filenameQuery: filenameQuery
+                })
+            });
+
+            const data = await response.text();
+            document.getElementById("result").innerText = data;
+        }
+    </script>
+</body>
+</html>
